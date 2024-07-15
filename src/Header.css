@@ -1,0 +1,23 @@
+
+
+.navbar-brand {
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    text-decoration: none;
+    color: #5cb85c;
+}
+
+.navbar-nav {
+    list-style-type: none; 
+    display: flex; 
+}
+
+.nav-item {
+    margin-right: 10px; 
+}
+
+.nav-link {
+    text-decoration: none; 
+    color: #999; 
+}
+

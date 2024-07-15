@@ -1,0 +1,20 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+    padding: none;
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa;
+    color: rgb(233, 222, 222);
+    width: 100%;
+    margin-top: auto; /* Đẩy footer xuống dưới cùng */
+}
