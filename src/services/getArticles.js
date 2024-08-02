@@ -1,23 +1,34 @@
 import axios from "axios";
+import errorHandler from "../helpers/errorHandler";
 
-export default async function getArticle({ headers, slug })
+// prettier-ignore
+async function getArticles({
+  headers,
+  limit = 10,
+  location,
+  page = 0,
+  tagName,
+  username,
+})
 {
   try
   {
-    const response = await axios.get(`https://api.realworld.io/api/articles/${slug}`, { headers });
-    const data = response.data;
-    if (data && data.article)
-    {
-      return data.article;
-    } else
-    {
-      throw new Error("Failed to fetch article");
-    }
+    const url = {
+      favorites: `https://api.realworld.io/api/articles?favorited=${username}&&limit=${limit}&&offset=${page}`,
+      feed: `https://api.realworld.io/api/articles/feed?limit=${limit}&&offset=${page}`,
+      global: `https://api.realworld.io/api/articles?limit=${limit}&&offset=${page}`,
+      profile: `https://api.realworld.io/api/articles?author=${username}&&limit=${limit}&&offset=${page}`,
+      tag: `https://api.realworld.io/api/articles?tag=${tagName}&&limit=${limit}&&offset=${page}`,
+    };
+
+    const { data } = await axios({ url: url[ location ], headers });
+
+    return data;
   } catch (error)
   {
-    console.error(error);
-    throw error;
+    errorHandler(error);
   }
 }
 
+export default getArticles;
 

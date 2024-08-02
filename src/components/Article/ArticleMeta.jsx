@@ -7,12 +7,12 @@ function ArticleMeta({ author, children, createdAt }) {
 
   return (
     <div className="article-meta">
-      <link
+      <Link
         state={{ bio, followersCount, image, username }}
         to={`/profile/${username}`}
       >
         <Avatar alt={username} src={image} />
-      </link>
+      </Link>
 
       <div className="info">
         <Link

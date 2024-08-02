@@ -52,7 +52,7 @@ function LoginForm({ onError })
         placeholder="Password"
         value={password}
         handler={inputHandler}
-        minLength="5"
+        minLength="3"
       ></FormFieldset>
       <button className="btn btn-lg btn-primary pull-xs-right">Login</button>
     </form>
