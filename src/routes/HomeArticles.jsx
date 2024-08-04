@@ -1,13 +1,12 @@
 import ArticlesPagination from '../components/Article/ArticlesPagination';
-import ArticlesPreview from "../components/Article/ArticlesPreview";
-import useArticleList from "../hooks/useArticles";
-import { useFeedContext } from "../context/FeedContext";
+import ArticlesPreview from '../components/Article/ArticlesPreview';
+import useArticles from '../hooks/useArticles';
+import { useFeedContext } from '../context/FeedContext';
 
-function HomeArticles()
-{
+function HomeArticles() {
   const { tabName, tagName } = useFeedContext();
 
-  const { articles, articlesCount, loading, setArticlesData } = useArticleList({
+  const { articles, articlesCount, loading, setArticlesData } = useArticles({
     location: tabName,
     tabName,
     tagName,
@@ -19,12 +18,7 @@ function HomeArticles()
     </div>
   ) : articles.length > 0 ? (
     <>
-      <ArticlesPreview
-        articles={articles}
-        loading={loading}
-        updateArticles={setArticlesData}
-      />
-
+      <ArticlesPreview articles={articles} loading={loading} updateArticles={setArticlesData} />
       <ArticlesPagination
         articlesCount={articlesCount}
         location={tabName}

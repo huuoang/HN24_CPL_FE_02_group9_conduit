@@ -1,28 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import getArticles from '../services/getArticles';
+import { useAuth } from '../context/AuthContext';
 
-import getArticles from "../services/getArticles";
-import { useAuth } from "../context/AuthContext";
-
-function useArticles({ location, tabName, tagName, username })
-{
-  const [ { articles, articlesCount }, setArticlesData ] = useState({
+function useArticles({ location, tabName, tagName, username }) {
+  const [{ articles, articlesCount }, setArticlesData] = useState({
     articles: [],
     articlesCount: 0,
   });
-  const [ loading, setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { headers } = useAuth();
 
-  useEffect(() =>
-  {
-    if (!headers && tabName === "feed") return;
+  useEffect(() => {
+    if (!headers && tabName === 'feed') return;
 
-    setLoading(true);
+    const fetchArticles = async () => {
+      setLoading(true);
+      try {
+        const data = await getArticles({ headers, location, tagName, username });
+        setArticlesData({
+          articles: data.articles || [],
+          articlesCount: data.articlesCount || 0,
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    getArticles({ headers, location, tabName, tagName, username })
-      .then(setArticlesData)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [ headers, location, tabName, tagName, username ]);
+    fetchArticles();
+  }, [headers, location, tabName, tagName, username]);
 
   return { articles, articlesCount, loading, setArticlesData };
 }

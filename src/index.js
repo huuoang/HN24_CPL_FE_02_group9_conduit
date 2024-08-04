@@ -14,6 +14,8 @@ import ReactDOM from "react-dom/client";
 import SignUp from "./routes/SignUp";
 import reportWebVitals from "./reportWebVitals";
 import Settings from "./routes/Settings";
+import CommentsSection from "./routes/Article/CommentsSection";
+import ProfileArticles from "./routes/Profile/ProfileArticles";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HashRouter>
@@ -28,10 +30,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="settings" element={<Settings />}/>
             
             <Route path="article/:slug" element={<Article />}>
-              
+              <Route index element={<CommentsSection />} />
             </Route>
             <Route path="profile/:username" element={<Profile />}>
-              
+              <Route index element={<ProfileArticles />} />
               <Route path="favorites" element={<ProfileFavArticles />} />
             </Route>
           </Route>
