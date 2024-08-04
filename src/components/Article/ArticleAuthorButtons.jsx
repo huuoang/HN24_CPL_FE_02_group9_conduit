@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-/*import deleteArticle from "../../services/deleteArticle"; */
+import deleteArticle from "../../services/deleteArticle";
 
 function ArticleAuthorButtons({ body, description, slug, tagList, title }) {
-  const { headers, isAuth } = useAuth();
+  const { headers, isAuth, loggedUser } = useAuth();
   const navigate = useNavigate();
+
+  const username = loggedUser.username;
 
   const handleClick = () => {
     if (!isAuth) return navigate("/login", { replace: true });
@@ -12,10 +14,15 @@ function ArticleAuthorButtons({ body, description, slug, tagList, title }) {
     const confirmation = window.confirm("Want to delete the article?");
     if (!confirmation) return;
 
-    /*deleteArticle({ headers, slug })
-      .then(() => navigate("/"))
+    deleteArticle({ headers, slug })
+      .then(() => {
+        if (username) {
+          navigate(`/profile/${username}`);
+        } else {
+          console.error("Username is not defined");
+        }
+      })
       .catch(console.error);
-    */
   };
 
   return (
