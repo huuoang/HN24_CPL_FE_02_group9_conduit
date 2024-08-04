@@ -1,6 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
-
 async function toggleFollow({ following, headers, username })
 {
 
@@ -20,7 +18,6 @@ async function toggleFollow({ following, headers, username })
     return data.profile;
   } catch (error)
   {
-    errorHandler(error);
     throw error;
   }
 }

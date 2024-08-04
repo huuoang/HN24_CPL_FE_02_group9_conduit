@@ -1,26 +1,14 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
-async function getComments({ slug })
-{
-
-  try
-  {
-    const response = await axios({ url: `https://api.realworld.io/api/articles/${slug}/comments` });
-    const data = response.data;
-
-    if (!data || !data.comments)
-    {
-      throw new Error("Invalid response data");
-    }
-
+async function getComments({ slug }) {
+  try {
+    const { data } = await axios({
+      url: `https://api.realworld.io/api/articles/${slug}/comments`,
+    });
     return data.comments;
-  } catch (error)
-  {
-    errorHandler(error);
+  } catch (error) {
     throw error;
   }
 }
- 
-export default getComments;
 
+export default getComments;

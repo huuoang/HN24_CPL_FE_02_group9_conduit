@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 async function getUser({ headers }) {
   try {
@@ -14,7 +13,6 @@ async function getUser({ headers }) {
 
     return response.data.user;
   } catch (error) {
-    errorHandler(error);
     throw error;
   }
 }

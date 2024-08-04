@@ -1,32 +1,26 @@
-import { Link, useParams } from "react-router-dom";
-
 import Avatar from "../Avatar";
-import postComment from "../../services/postComment";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 
-function CommentEditor({ updateComments })
-{
-  const [ { body }, setForm ] = useState({ body: "" });
-  const { headers, isAuth, loggedUser } = useAuth();
+function CommentEditor({ onAddComment }) {
+  const [body, setBody] = useState("");
+  const { isAuth, loggedUser } = useAuth();
   const { username, image } = loggedUser || {};
-  const { slug } = useParams();
 
-  const handleSubmit = (e) =>
-  {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (body.trim() === "") return;
 
-    postComment({ body, headers, slug })
-      .then(updateComments)
-      .then(setForm({ body: "" }))
+    onAddComment(body)
+      .then(() => {
+        setBody("");
+      })
       .catch(console.error);
   };
- 
-  const handleChange = (e) =>
-  {
-    setForm({ body: e.target.value });
+
+  const handleChange = (e) => {
+    setBody(e.target.value);
   };
 
   return isAuth ? (
@@ -46,12 +40,7 @@ function CommentEditor({ updateComments })
         <button className="btn btn-sm btn-primary">Post Comment</button>
       </div>
     </form>
-  ) : (
-    <span>
-      <Link to="/login">Sign in</Link> or <Link to="/register">Sign up</Link> to
-      add comments on this article.
-    </span>
-  );
+  ) : null; // Không hiển thị gì nếu chưa đăng nhập
 }
 
 export default CommentEditor;

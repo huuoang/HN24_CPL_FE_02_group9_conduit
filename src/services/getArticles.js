@@ -1,5 +1,4 @@
 import axios from 'axios';
-import errorHandler from '../helpers/errorHandler';
 
 // prettier-ignore
 async function getArticles({ headers, limit = 10, location, offset = 0, tagName, username }) {
@@ -16,7 +15,7 @@ async function getArticles({ headers, limit = 10, location, offset = 0, tagName,
 
     return data;
   } catch (error) {
-    errorHandler(error);
+    
   }
 }
 

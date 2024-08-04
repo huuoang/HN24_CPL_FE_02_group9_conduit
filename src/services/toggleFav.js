@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 async function toggleFav({ slug, favorited, headers })
 {
@@ -21,7 +20,6 @@ async function toggleFav({ slug, favorited, headers })
     return data.article;
   } catch (error)
   {
-    errorHandler(error);
     throw error;
   }
 }

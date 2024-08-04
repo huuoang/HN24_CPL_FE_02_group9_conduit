@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 /**
  * Logs in a user to the application.
@@ -29,7 +28,7 @@ async function userLogin({ email, password })
     return loggedIn;
   } catch (error)
   {
-    errorHandler(error);
+    
   }
 }
 

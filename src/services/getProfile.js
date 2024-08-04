@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 async function getProfile({ headers, username })
 {
@@ -15,8 +14,7 @@ async function getProfile({ headers, username })
 
     return data.profile;
   } catch (error)
-  {
-    errorHandler(error);
+  {  
     throw error;
   }
 }

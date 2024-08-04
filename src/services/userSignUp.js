@@ -1,6 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
-
 async function userSignUp({ username, email, password }) {
   try {
     if (!username || !email || !password) {
@@ -34,7 +32,7 @@ async function userSignUp({ username, email, password }) {
         throw new Error("Email already exists");
       }
     }
-    errorHandler(error);
+    
     throw error;
   }
 }

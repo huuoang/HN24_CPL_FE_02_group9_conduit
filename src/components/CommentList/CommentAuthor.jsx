@@ -23,4 +23,3 @@ function CommentAuthor({ bio, followersCount, following, image, username })
   );
 }
 export default CommentAuthor;
-  

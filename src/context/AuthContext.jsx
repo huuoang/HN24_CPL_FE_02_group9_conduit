@@ -7,9 +7,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-const loggedIn = JSON.parse(localStorage.getItem("loggedUser"));
-
-const authState = {
+const defaultAuthState = {
   headers: null,
   isAuth: false,
   loggedUser: {
@@ -21,8 +19,10 @@ const authState = {
   },
 };
 
+const loggedIn = JSON.parse(localStorage.getItem("loggedUser"));
+
 function AuthProvider({ children }) {
-  const [authState, setAuthState] = useState(loggedIn || authState);
+  const [authState, setAuthState] = useState(loggedIn || defaultAuthState);
 
   useEffect(() => {
     if (!authState.headers) return;
@@ -31,7 +31,7 @@ function AuthProvider({ children }) {
       .then((loggedUser) => {
         setAuthState((prev) => ({
           ...prev,
-          isAuth: true, 
+          isAuth: true,
           loggedUser,
         }));
       })

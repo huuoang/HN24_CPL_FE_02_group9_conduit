@@ -1,6 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
-
 async function userUpdate({ headers, bio, email, image, password, username })
 {
 
@@ -27,7 +25,7 @@ async function userUpdate({ headers, bio, email, image, password, username })
     return loggedIn;
   } catch (error)
   {
-    errorHandler(error);
+   
     throw error;
   }
 }

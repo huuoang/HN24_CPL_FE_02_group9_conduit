@@ -1,5 +1,5 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
+
 
 const deleteArticle = async ({ slug, headers }) =>
 {
@@ -16,7 +16,7 @@ const deleteArticle = async ({ slug, headers }) =>
     }
     else
     {
-      errorHandler(error);
+     
       throw error;
     }
   }

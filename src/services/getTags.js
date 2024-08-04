@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 async function getTags()
 {
@@ -15,7 +14,7 @@ async function getTags()
     return response.data.tags;
   } catch (error)
   {
-    errorHandler(error);
+    
     throw error;
   }
 }

@@ -1,5 +1,4 @@
 import axios from "axios";
-import errorHandler from "../helpers/errorHandler";
 
 async function setArticle({ body, description, headers, slug, tagList, title })
 {
@@ -21,7 +20,6 @@ async function setArticle({ body, description, headers, slug, tagList, title })
     return data.article.slug;
   } catch (error)
   {
-    errorHandler(error);
     throw error;
   }
 }
