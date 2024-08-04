@@ -7,40 +7,39 @@ import Markdown from "markdown-to-jsx";
 import getProfile from "../../services/getProfile";
 import { useAuth } from "../../context/AuthContext";
 
-function AuthorInfo()
-{
+function AuthorInfo() {
   const { state } = useLocation();
-  const [ { bio, followersCount, following, image }, setAuthor ] = useState(
-    state || {}
-  );
+  const [author, setAuthor] = useState(state || {});
   const { headers, loggedUser } = useAuth();
   const { username } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() =>
-  {
-    if (state && state.bio === bio) return;
+  useEffect(() => {
+    
+    if (!state || state.username !== username) {
+      getProfile({ headers, username })
+        .then(setAuthor)
+        .catch((error) => {
+          console.error(error);
+          navigate("/not-found", { replace: true });
+        });
+    }
+  }, [username, headers, state, navigate]);
 
-    getProfile({ headers, username })
-      .then(setAuthor)
-      .catch((error) =>
-      {
-        console.error(error);
-        navigate("/not-found", { replace: true });
-      });
-  }, [ username, headers, state, navigate,bio ]);
-
-  const followHandler = ({ followersCount, following }) =>
-  {
-    setAuthor((prev) => ({ ...prev, followersCount, following }));
+  const followHandler = ({ followersCount, following }) => {
+    setAuthor((prev) => ({
+      ...prev,
+      followersCount,
+      following
+    }));
   };
 
   return (
     <div className="col-xs-12 col-md-10 offset-md-1">
-      <Avatar alt={username} className="user-img" src={image} />
+      <Avatar alt={username} className="user-img" src={author.image} />
       <h4>{username}</h4>
 
-      {bio && <Markdown options={{ forceBlock: true }}>{bio}</Markdown>}
+      {author.bio && <Markdown options={{ forceBlock: true }}>{author.bio}</Markdown>}
 
       {username === loggedUser.username ? (
         <Link
@@ -51,8 +50,8 @@ function AuthorInfo()
         </Link>
       ) : (
         <FollowButton
-          followersCount={followersCount}
-          following={following}
+          followersCount={author.followersCount}
+          following={author.following}
           handler={followHandler}
           username={username}
         />

@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-
 import FormFieldset from "../../FormFieldset";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import userUpdate from "../../../services/userUpdate";
 
-function SettingsForm()
-{
+function SettingsForm() {
   const { headers, isAuth, loggedUser, setAuthState } = useAuth();
-  const [ { bio, email, image, password, username }, setForm ] = useState({
+  const [form, setForm] = useState({
     bio: loggedUser.bio || "",
     email: loggedUser.email,
     image: loggedUser.image || "",
@@ -16,32 +14,48 @@ function SettingsForm()
     username: loggedUser.username,
   });
 
-  const [ inactive, setInactive ] = useState(false);
+  const [inactive, setInactive] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!isAuth) navigate("/");
-  }, [ isAuth, loggedUser, navigate ]);
+  }, [isAuth, loggedUser, navigate]);
 
-  const inputHandler = (e) =>
-  {
+  const inputHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    setForm((form) => ({ ...form, [ name ]: value }));
+    setForm((form) => ({ ...form, [name]: value }));
     setInactive(false);
+
+    // Xóa lỗi mật khẩu khi người dùng nhập lại
+    if (name === "password") {
+      setPasswordError("");
+    }
   };
 
-  const formSubmit = async (e) =>
-  {
+  const formSubmit = async (e) => {
     e.preventDefault();
 
     if (inactive) return;
 
-    userUpdate({ headers, bio, email, image, password, username })
-      .then(setAuthState)
-      .catch(console.error);
+    if (form.password.length < 3) {
+      setPasswordError("Password must be longer than 3 characters");
+      return;
+    }
+
+    try {
+      await userUpdate({ headers, ...form });
+      setAuthState((prevState) => ({
+        ...prevState,
+        loggedUser: { ...prevState.loggedUser, ...form },
+      }));
+      navigate(`/profile/${form.username}`); // Chuyển hướng đến trang profile
+    } catch (error) {
+      console.error(error);
+    }
+
     setInactive(true);
   };
 
@@ -52,17 +66,17 @@ function SettingsForm()
           <FormFieldset
             placeholder="URL of profile picture"
             name="image"
-            value={image}
+            value={form.image}
             handler={inputHandler}
-          ></FormFieldset>
+          />
 
           <FormFieldset
             placeholder="Your Name"
             name="username"
             required
-            value={username}
+            value={form.username}
             handler={inputHandler}
-          ></FormFieldset>
+          />
 
           <fieldset className="form-group">
             <textarea
@@ -70,26 +84,33 @@ function SettingsForm()
               rows="8"
               placeholder="Short bio about you"
               name="bio"
-              value={bio}
+              value={form.bio}
               onChange={inputHandler}
-            ></textarea>
+            />
           </fieldset>
 
           <FormFieldset
             placeholder="Email"
             name="email"
             required
-            value={email}
+            value={form.email}
             handler={inputHandler}
-          ></FormFieldset>
+          />
 
           <FormFieldset
             type="password"
             name="password"
-            value={password}
+            value={form.password}
             placeholder="Password"
             handler={inputHandler}
-          ></FormFieldset>
+            minLength="3"
+          />
+
+          {passwordError && (
+            <span style={{ color: "red", fontSize: "0.875rem" }}>
+              {passwordError}
+            </span>
+          )}
 
           {!inactive && (
             <button
