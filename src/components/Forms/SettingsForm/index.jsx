@@ -3,6 +3,7 @@ import FormFieldset from "../../FormFieldset";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import userUpdate from "../../../services/userUpdate";
+import getUser from "../../../services/getUser"; 
 
 function SettingsForm() {
   const { headers, isAuth, loggedUser, setAuthState } = useAuth();
@@ -10,17 +11,26 @@ function SettingsForm() {
     bio: loggedUser.bio || "",
     email: loggedUser.email,
     image: loggedUser.image || "",
-    password: loggedUser.password || "",
+    password: "", 
     username: loggedUser.username,
   });
 
+  const [currentUser, setCurrentUser] = useState(null);
   const [inactive, setInactive] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
+  const [formError, setFormError] = useState(""); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuth) navigate("/");
-  }, [isAuth, loggedUser, navigate]);
+    if (!isAuth) {
+      navigate("/");
+    } else {
+      getUser({ headers }).then(user => {
+        setCurrentUser(user);
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+  }, [isAuth, headers, navigate]);
 
   const inputHandler = (e) => {
     const name = e.target.name;
@@ -29,9 +39,8 @@ function SettingsForm() {
     setForm((form) => ({ ...form, [name]: value }));
     setInactive(false);
 
-    // Xóa lỗi mật khẩu khi người dùng nhập lại
-    if (name === "password") {
-      setPasswordError("");
+    if (formError) {
+      setFormError("");
     }
   };
 
@@ -40,18 +49,27 @@ function SettingsForm() {
 
     if (inactive) return;
 
-    if (form.password.length < 3) {
-      setPasswordError("Password must be longer than 3 characters");
-      return;
-    }
-
     try {
-      await userUpdate({ headers, ...form });
+      if (currentUser) {
+        if (form.username !== currentUser.username || form.email !== currentUser.email) {
+          setFormError("Username or email already exists. Please try again.");
+          return;
+        }
+      }
+
+      const updatedFields = {};
+      if (form.bio !== currentUser.bio) updatedFields.bio = form.bio;
+      if (form.email !== currentUser.email) updatedFields.email = form.email;
+      if (form.image !== currentUser.image) updatedFields.image = form.image;
+      if (form.password) updatedFields.password = form.password;
+      if (form.username !== currentUser.username) updatedFields.username = form.username;
+
+      await userUpdate({ headers, ...updatedFields });
       setAuthState((prevState) => ({
         ...prevState,
         loggedUser: { ...prevState.loggedUser, ...form },
       }));
-      navigate(`/profile/${form.username}`); // Chuyển hướng đến trang profile
+      navigate(`/profile/${form.username}`); 
     } catch (error) {
       console.error(error);
     }
@@ -106,9 +124,9 @@ function SettingsForm() {
             minLength="3"
           />
 
-          {passwordError && (
+          {formError && (
             <span style={{ color: "red", fontSize: "0.875rem" }}>
-              {passwordError}
+              {formError}
             </span>
           )}
 

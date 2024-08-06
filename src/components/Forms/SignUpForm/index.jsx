@@ -72,6 +72,7 @@ function SignUpForm({ onError }) {
           placeholder="Password"
           value={form.password}
           handler={inputHandler}
+          minLength="3"
         />
       </div>
 

@@ -28,7 +28,7 @@ async function userLogin({ email, password })
     return loggedIn;
   } catch (error)
   {
-    
+    throw new Error(error.response?.data?.errors?.email[0] || "Email or password is not correct!");
   }
 }
 

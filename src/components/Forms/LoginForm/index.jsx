@@ -19,7 +19,7 @@ function LoginForm({ onError })
       .then(setAuthState)
       .then(() => navigate("/"))
       .catch(onError => {
-        setEr(onError.errors?.email[0] || onError.errors?.password[0] || "Failed to login user.");
+        setEr(onError.errors?.email[0] || onError.errors?.password[0] || "Email or password is incorrect.");
       });
   };
 

@@ -7,7 +7,7 @@ function ArticlesPagination({ articlesCount, location, tagName, updateArticles, 
   const { headers } = useAuth();
 
   const handlePageChange = ({ selected: page }) => {
-    const offset = page * 10; // Calculate the offset based on the selected page
+    const offset = page * 10; 
     getArticles({ headers, location, tagName, username, offset })
       .then(data => updateArticles(data))
       .catch(console.error);

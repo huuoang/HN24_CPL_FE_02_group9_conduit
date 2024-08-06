@@ -17,7 +17,7 @@ function CommentList({ comments, onDeleteComment }) {
   };
 
   return comments?.length > 0 ? (
-    comments.map(({ author, author: { username }, body, createdAt, id }) => (
+    comments.map(({ author, body, createdAt, id }) => (
       <div className="card" key={id}>
         <div className="card-block">
           <p className="card-text">{body}</p>
@@ -25,7 +25,7 @@ function CommentList({ comments, onDeleteComment }) {
         <div className="card-footer">
           <CommentAuthor {...author} />
           <span className="date-posted">{dateFormatter(createdAt)}</span>
-          {isAuth && loggedUser.username === username && (
+          {isAuth && loggedUser.username === author.username && (
             <button
               className="btn btn-sm btn-outline-secondary pull-xs-right"
               onClick={() => handleDelete(id)}
